@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
-#include "Eigen/Dense"
+#include "../Eigen/Dense"
 #include "finite_difference.h"
 using namespace std;
 

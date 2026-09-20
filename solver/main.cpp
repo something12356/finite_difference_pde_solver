@@ -42,9 +42,9 @@ int main(){
     }
     solution.close();
 
-    FILE* graphing_script = fopen("plot.py", "r");
+    FILE* graphing_script = fopen("../plotter/plot.py", "r");
     Py_Initialize();
-    PyRun_SimpleFile(graphing_script, "plot.py");
+    PyRun_SimpleFile(graphing_script, "../plotter/plot.py");
     fclose(graphing_script);
     Py_Finalize();
 

@@ -1,4 +1,5 @@
-./solution.txt
-./main
-./finite_difference
-./test_suite
+solver/solution.txt
+solver/main
+solver/finite_difference
+solver/test_suite
+solver/main
