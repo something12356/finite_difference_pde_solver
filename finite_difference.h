@@ -3,9 +3,9 @@
 
 #ifndef FINITE_DIFFERENCE
 #define FINITE_DIFFERENCE
-Eigen::MatrixXd construct_laplacian(int dim, int grid_size);
+Eigen::MatrixXd construct_laplacian(int dim, int grid_size, int phase_size);
 
-int linear_indexing(const std::vector<int>& idxs, int dim, int grid_size);
+int linear_indexing(const std::vector<int>& idxs, int dim, int grid_size, int phase_size);
 
 std::vector<int> normal_indexing(int lin_idx, int dim, int grid_size);
 

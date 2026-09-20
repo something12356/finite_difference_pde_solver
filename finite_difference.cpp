@@ -17,7 +17,7 @@ struct Grid {
 int linear_indexing(const std::vector<int>& idxs, int dim, int grid_size, int phase_size){
     int lin_idx {0};
     for (int i {}; i < dim; i++){
-        lin_idx += idxs[i]*phase_size;
+        lin_idx += idxs[i]*pow(grid_size, i);
     }
     
     return lin_idx;
@@ -73,7 +73,6 @@ Eigen::MatrixXd construct_laplacian(int dim, int grid_size, int phase_size){
             }
         }
     }
-    // Convert to Eigen matrix
 
     return laplacian;
 }
@@ -97,7 +96,7 @@ struct Grid construct_grid(int dim, double resolution, std::vector<double> limit
 // Returns Cartesian coordinates
 std::vector<double> grid_to_cartesian(std::vector<int> indices, std::vector<double> grid_distances){
     std::vector<double> coords(indices.size());
-    for (int i: indices) {
+    for (int i {}; i < indices.size(); i++) {
         coords[i] = indices[i]*grid_distances[i];
     }
 
@@ -105,8 +104,8 @@ std::vector<double> grid_to_cartesian(std::vector<int> indices, std::vector<doub
 }
 
 Eigen::VectorXd init_solution(double (*bdry_fn)(std::vector<double>), int dim, int grid_size, std::vector<double> grid_distances, int phase_size){
-
-    Eigen::VectorXd soln(phase_size);
+    cout << phase_size;
+    Eigen::VectorXd soln = Eigen::VectorXd::Zero(phase_size);
     for (int i {}; i < phase_size; i++){
         if (chk_bdry_pt(i, dim, grid_size)){
             soln(i) = bdry_fn(grid_to_cartesian(normal_indexing(i, dim, grid_size), grid_distances));
@@ -128,19 +127,22 @@ std::vector<int> find_free_node_pos(int dim, int grid_size, int phase_size) {
 
 Eigen::MatrixXd solver(double (*bdry_fn)(std::vector<double>), double (*source)(std::vector<double>), int dim, double resolution, std::vector<double> limits){
     struct Grid grid = construct_grid(dim, resolution, limits);
-    int phase_size = pow(dim, grid.grid_size);
+    int phase_size = pow(grid.grid_size, dim);
 
     Eigen::VectorXd soln = init_solution(bdry_fn, dim, grid.grid_size, grid.grid_distances, phase_size);
     Eigen::MatrixXd laplacian = construct_laplacian(dim, grid.grid_size, phase_size);
 
-    Eigen::VectorXd source_vec = soln.unaryExpr(source);
+    Eigen::VectorXd source_vec(phase_size);
+    for (int i {}; i < phase_size; i++) {
+        source_vec(i) = source(grid_to_cartesian(normal_indexing(i, dim, grid.grid_size), grid.grid_distances));
+    }
     source_vec = source_vec - laplacian * soln;
 
     std::vector<int> free_nodes = find_free_node_pos(dim, grid.grid_size, phase_size);
 
     Eigen::MatrixXd lap_free = laplacian(free_nodes, free_nodes);
     
-    soln(free_nodes) = lap_free.inverse() * source_vec;
+    soln(free_nodes) = lap_free.inverse() * source_vec(free_nodes);
 
     return soln;
 }

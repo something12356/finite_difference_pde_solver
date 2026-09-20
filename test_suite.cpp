@@ -8,10 +8,12 @@ using namespace std;
 // Test linear_indexing function
 void test_lin_idx(){
     std::vector<int> idxs {2, 1};
-    cout << "Testing (2,1) on 3x3 grid\n" << linear_indexing(idxs, 2, 3) << '\n';
+    int phase = pow(3, 2);
+    cout << "Testing (2,1) on 3x3 grid\n" << linear_indexing(idxs, 2, 3, phase) << '\n';
 
     std::vector<int> idxs2 {1, 3, 4};
-    cout << "Testing (1, 3, 4) on 5x5x5 grid\n" << linear_indexing(idxs2, 3, 5) << '\n';
+    phase = pow(5, 3);
+    cout << "Testing (1, 3, 4) on 5x5x5 grid\n" << linear_indexing(idxs2, 3, 5, phase) << '\n';
 }
 
 void test_norm_idx(){
@@ -31,7 +33,8 @@ void test_norm_idx(){
 }
 
 void test_laplacian_constructor(){
-    Eigen::MatrixXd L(construct_laplacian(2, 4));
+    int phase = pow(4, 2);
+    Eigen::MatrixXd L(construct_laplacian(2, 4, phase));
     std::cout << "Hi?\n";
     for (int i {0}; i < 16; i++){
         for (int j {0}; j < 16; j++){
