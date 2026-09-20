@@ -1,5 +1,6 @@
 #include <vector>
 #include "Eigen/Dense"
+using namespace std;
 
 #ifndef FINITE_DIFFERENCE
 #define FINITE_DIFFERENCE
@@ -11,6 +12,8 @@ std::vector<int> normal_indexing(int lin_idx, int dim, int grid_size);
 
 bool chk_bdry_pt(int i, int dim, int grid_size);
 
-Eigen::MatrixXd solver(double (*bdry_fn)(std::vector<double>), double (*source)(std::vector<double>), int dim, double resolution, std::vector<double> limits);
+vector<vector<double>> solver(double (*bdry_fn)(std::vector<double>), double (*source)(std::vector<double>), int dim, double resolution, std::vector<double> limits);
+
+std::vector<double> grid_to_cartesian(std::vector<int> indices, std::vector<double> grid_distances);
 
 #endif

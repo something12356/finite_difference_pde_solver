@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm>
+#include <fstream>
 #include "Eigen/Dense"
 #include "finite_difference.h"
 using namespace std;
@@ -52,7 +53,6 @@ Returns 1 if target is adjacent to centre, and -2*dim if target is the centre,
 where dim is the number of dimensions we're solving Poisson's equation in
 Returns 0 otherwise.*/
 Eigen::MatrixXd construct_laplacian(int dim, int grid_size, int phase_size){
-    std::cout << "Phase size: " << phase_size;
     Eigen::MatrixXd laplacian(phase_size, phase_size);
     
     // Construct the laplacian row by row
@@ -80,11 +80,14 @@ Eigen::MatrixXd construct_laplacian(int dim, int grid_size, int phase_size){
 // Takes in a rectangle with limits (x_lim, y_lim, z_lim, ...) and creates a square grid for it given the resolution
 // The resolution is the largest distance that we're okay with between grid points along any axis
 struct Grid construct_grid(int dim, double resolution, std::vector<double> limits){
+    if (static_cast<size_t>(dim) != limits.size()) {
+        cout << "The amount of coordinate limits must match the dimension!!\n";
+    }
     int grid_size = ceil(*max_element(limits.begin(), limits.end())/resolution);
 
     std::vector<double> grid_distances(limits);
-    for (double i: grid_distances) {
-        i = i/grid_size;
+    for (int i {}; i < dim; i++) {
+        grid_distances[i] = grid_distances[i]/(grid_size-1);
     }
 
     struct Grid grid = {grid_size, grid_distances};
@@ -94,7 +97,7 @@ struct Grid construct_grid(int dim, double resolution, std::vector<double> limit
 
 // Takes in a square grid with distances (h_x, h_y, h_z, ...) between points in each dimension
 // Returns Cartesian coordinates
-std::vector<double> grid_to_cartesian(std::vector<int> indices, std::vector<double> grid_distances){
+std::vector<double> grid_to_cartesian(std::vector<int> indices, std::vector<double> grid_distances) {
     std::vector<double> coords(indices.size());
     for (int i {}; i < indices.size(); i++) {
         coords[i] = indices[i]*grid_distances[i];
@@ -104,7 +107,6 @@ std::vector<double> grid_to_cartesian(std::vector<int> indices, std::vector<doub
 }
 
 Eigen::VectorXd init_solution(double (*bdry_fn)(std::vector<double>), int dim, int grid_size, std::vector<double> grid_distances, int phase_size){
-    cout << phase_size;
     Eigen::VectorXd soln = Eigen::VectorXd::Zero(phase_size);
     for (int i {}; i < phase_size; i++){
         if (chk_bdry_pt(i, dim, grid_size)){
@@ -125,8 +127,10 @@ std::vector<int> find_free_node_pos(int dim, int grid_size, int phase_size) {
     return idxs;
 }
 
-Eigen::MatrixXd solver(double (*bdry_fn)(std::vector<double>), double (*source)(std::vector<double>), int dim, double resolution, std::vector<double> limits){
+// Returns vector of Cartesian coordinates and the solution's value at those coordinates
+vector<vector<double>> solver(double (*bdry_fn)(std::vector<double>), double (*source)(std::vector<double>), int dim, double resolution, std::vector<double> limits){
     struct Grid grid = construct_grid(dim, resolution, limits);
+
     int phase_size = pow(grid.grid_size, dim);
 
     Eigen::VectorXd soln = init_solution(bdry_fn, dim, grid.grid_size, grid.grid_distances, phase_size);
@@ -144,5 +148,11 @@ Eigen::MatrixXd solver(double (*bdry_fn)(std::vector<double>), double (*source)(
     
     soln(free_nodes) = lap_free.inverse() * source_vec(free_nodes);
 
-    return soln;
+    vector<vector<double>> cartesian_coord_soln(phase_size);
+    for (int i {}; i < phase_size; i++) {
+        cartesian_coord_soln[i] = grid_to_cartesian(normal_indexing(i, dim, grid.grid_size), grid.grid_distances);
+        cartesian_coord_soln[i].push_back(soln(i));
+    }
+
+    return cartesian_coord_soln;
 }

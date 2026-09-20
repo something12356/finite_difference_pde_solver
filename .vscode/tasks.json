@@ -5,6 +5,9 @@
             "label": "C/C++: g++ build active file",
             "command": "/usr/bin/g++",
             "args": [
+                "-I/usr/include/python3.14",
+                "-L/usr/lib", 
+                "-lpython3.14",
                 "-fdiagnostics-color=always",
                 "-g",
                 "*.cpp",
