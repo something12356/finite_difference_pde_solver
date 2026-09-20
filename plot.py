@@ -26,9 +26,7 @@ def main():
 
     ## Plot a 3D surface with the height being the function value
     if dim == 2:
-        colours = func_vals
-
-        ax.plot_trisurf(grid[:,0], grid[:,1], func_vals, cmap='Blues')
+        ax.plot_trisurf(grid[:,0], grid[:,1], func_vals, cmap='gist_heat')
 
     ## Plot a heatmap based on the function value at each point
     if dim == 3:

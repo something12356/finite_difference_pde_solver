@@ -9,15 +9,15 @@
 #include "test_suite.h"
 using namespace std;
 
+// The functions used to produce the image in the README
 double bdry_fn(std::vector<double> x) {
-    return 3.0*sin(M_PI*x[0])+3.0*sin(M_PI*x[1]);
+    return -7*sin(M_PI*(x[0]+x[1]));
 }
 
 double source(std::vector<double> x) {
-    if ((x[0]-1)*(x[0]-1)+(x[1]-1)*(x[1]-1) < 0.25) {
-        return -1;
-    }
-    return 0;
+    double a = x[0]-1;
+    double b = x[1]-1;
+    return a/(abs(b)+0.01);
 }
 
 int main(){

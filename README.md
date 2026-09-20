@@ -1,1 +1,1 @@
-Numerical solver for the Poisson equation with Direchlet boundary conditions in N dimensions using a generalised version of the 5-point finite difference method (which is for 2 dimensional problems). The solution off the grid is approximated using a linear combination of the 2^N nearest grid points.
+Numerical solver for the Poisson equation with Direchlet boundary conditions in N dimensions using a generalised version of the 5-point finite difference method (which is for 2 dimensional problems)..
