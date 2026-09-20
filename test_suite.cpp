@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Eigen/Dense"
 #include "finite_difference.h"
 using namespace std;
 
@@ -6,23 +7,23 @@ using namespace std;
 
 // Test linear_indexing function
 void test_lin_idx(){
-    std::vector<size_t> idxs {2, 1};
+    std::vector<int> idxs {2, 1};
     cout << "Testing (2,1) on 3x3 grid\n" << linear_indexing(idxs, 2, 3) << '\n';
 
-    std::vector<size_t> idxs2 {1, 3, 4};
+    std::vector<int> idxs2 {1, 3, 4};
     cout << "Testing (1, 3, 4) on 5x5x5 grid\n" << linear_indexing(idxs2, 3, 5) << '\n';
 }
 
 void test_norm_idx(){
     cout << "Testing lin_idx=5 on 3x3 grid\n";
-    std::vector<size_t> idxs(normal_indexing(5, 2, 3));
+    std::vector<int> idxs(normal_indexing(5, 2, 3));
     for (int i {}; i < 2; i++){
         cout << idxs[i] << ',';
     }
     cout << '\n';
 
     cout << "Testing lin_idx=116 on 5x5x5 grid\n";
-    std::vector<size_t> idxs2(normal_indexing(116, 3, 5));
+    std::vector<int> idxs2(normal_indexing(116, 3, 5));
     for (int i {}; i < 3; i++){
         cout << idxs2[i] << ',';
     }
@@ -30,12 +31,13 @@ void test_norm_idx(){
 }
 
 void test_laplacian_constructor(){
-    vector<vector<int>> L(laplacian_constructor(2, 4));
-    for (vector<int> row: L) {
-        for (int x: row) {
-            cout << x << ',';
+    Eigen::MatrixXd L(construct_laplacian(2, 4));
+    std::cout << "Hi?\n";
+    for (int i {0}; i < 16; i++){
+        for (int j {0}; j < 16; j++){
+            cout << L(i, j);
         }
-        cout << '\n';
+        std:cout << '\n';
     }
 
 }

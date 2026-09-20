@@ -5,9 +5,20 @@
 #include "test_suite.h"
 using namespace std;
 
+double bdry_fn(std::vector<double>) {
+    return 1.0;
+}
+
+double source(std::vector<double>) {
+    return 0.0;
+}
+
 int main(){
-    bool test = true; // TODO: Change into command line arg
+    bool test = false; // TODO: Change into command line arg
     if (test) run_all_tests();
+
+    std::vector<int> limits {1, 1};
+    cout << solver(bdry_fn, source, 2, 0.01, {1, 1});
 
     return 0;
 }
