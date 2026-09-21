@@ -27,7 +27,7 @@ int main(){
     // Solves laplacian(phi) = source
     // With Direchlet boundary condition phi = bdry_fn on the boundary of the domain
     int dim = 2;
-    double resolution = 0.1;
+    double resolution = 0.05;
     vector<double> limits = {2.0, 2.0};
 
     ofstream solution;

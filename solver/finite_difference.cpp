@@ -144,9 +144,14 @@ vector<vector<double>> solver(double (*bdry_fn)(std::vector<double>), double (*s
 
     std::vector<int> free_nodes = find_free_node_pos(dim, grid.grid_size, phase_size);
 
+    // Eigen partialPiv requires actual matrices and not views of other matrices
+    // So we need to copy across the free indices first
+    // This is worth it to be able to use partialPiv as it is faster and more accurate than .inverse()
     Eigen::MatrixXd lap_free = laplacian(free_nodes, free_nodes);
-    
-    soln(free_nodes) = lap_free.inverse() * source_vec(free_nodes);
+    Eigen::VectorXd soln_free = soln(free_nodes);
+    Eigen::VectorXd source_free = source_vec(free_nodes); 
+    soln_free = lap_free.partialPivLu().solve(source_free);
+    soln(free_nodes) = soln_free;
 
     vector<vector<double>> cartesian_coord_soln(phase_size);
     for (int i {}; i < phase_size; i++) {

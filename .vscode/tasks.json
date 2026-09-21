@@ -10,6 +10,7 @@
                 "-lpython3.14",
                 "-fdiagnostics-color=always",
                 "-g",
+                "-O3",
                 "*.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
