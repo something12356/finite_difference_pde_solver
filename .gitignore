@@ -3,3 +3,4 @@ solver/main
 solver/finite_difference
 solver/test_suite
 solver/main
+.vscode/tasks.json
