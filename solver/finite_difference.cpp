@@ -61,7 +61,7 @@ Eigen::MatrixXd construct_laplacian(int dim, int grid_size, int phase_size){
     for (int i {}; i < phase_size; i++){
         if (!chk_bdry_pt(i, dim, grid_size)) { // Ensures we won't be trying to access points outside the grid
             std::vector<int> idxs = normal_indexing(i, dim, grid_size); // The coordinates of the grid point for this row
-            laplacian(i, i) = -4.0; // Set the diagonal entry to -4
+            laplacian(i, i) = -2*dim; // Set the diagonal entry to -4
 
             for (int j {}; j < dim; j++) {
                 std::vector<int> adj_id(idxs);
